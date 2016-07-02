@@ -429,7 +429,7 @@ type PlayScene struct {
 		allow   bool
 		x, y    float64
 	}
-	state struct {
+	State struct {
 		Player struct {
 			X, Y float64
 			Dir  rune
@@ -463,20 +463,12 @@ func (p *PlayScene) InitEx(px, py float64, pdir rune, mx, my int, keys map[strin
 	p.sword.x, p.sword.y = 0, 0
 	p.sword.allow = false
 
-	p.state.Player.X = px
-	p.state.Player.Y = py
-	p.state.Player.Dir = pdir
-	p.state.Map.X = mx
-	p.state.Map.Y = my
-	p.state.Keys = p.keys
-}
-
-func (p *PlayScene) MarshalJSON() ([]byte, error) {
-	return json.Marshal(&p.state)
-}
-
-func (p *PlayScene) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &p.state)
+	p.State.Player.X = px
+	p.State.Player.Y = py
+	p.State.Player.Dir = pdir
+	p.State.Map.X = mx
+	p.State.Map.Y = my
+	p.State.Keys = p.keys
 }
 
 func (p *PlayScene) initMap() {
@@ -601,11 +593,11 @@ func (p *PlayScene) Update(sp bool, dx, dy float64) {
 		p.current = p.maps[nx][ny]
 		p.initMap()
 
-		p.state.Player.X = p.player.x
-		p.state.Player.Y = p.player.y
-		p.state.Player.Dir = p.player.dir
-		p.state.Map.X = nx
-		p.state.Map.Y = ny
+		p.State.Player.X = p.player.x
+		p.State.Player.Y = p.player.y
+		p.State.Player.Dir = p.player.dir
+		p.State.Map.X = nx
+		p.State.Map.Y = ny
 	}
 
 	if p.sword.counter > -1 {
@@ -993,7 +985,7 @@ func saveGame(name string) {
 	}
 
 	name = filepath.Join(conf.pref, name)
-	buf, err := json.MarshalIndent(&playScene, "", "\t")
+	buf, err := json.MarshalIndent(&playScene.State, "", "\t")
 	if ek(err) {
 		return
 	}
@@ -1021,12 +1013,12 @@ func loadGame(name string) {
 	}
 
 	var p PlayScene
-	err = json.Unmarshal(buf, &p.state)
+	err = json.Unmarshal(buf, &p.State)
 	if ek(err) {
 		return
 	}
 
-	s := &p.state
+	s := &p.State
 	playScene.InitEx(s.Player.X, s.Player.Y, s.Player.Dir, s.Map.X, s.Map.Y, s.Keys)
 	nextScene = &playScene
 	pause = false
