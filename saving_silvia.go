@@ -1009,7 +1009,7 @@ func saveGame(name string) {
 	ek(err)
 
 	if err == nil {
-		sdl.Log("Save game to %s successfully", name)
+		sdl.Log("Saved game to %s successfully", name)
 	}
 }
 
@@ -1030,8 +1030,5 @@ func loadGame(name string) {
 	playScene.InitEx(s.Player.X, s.Player.Y, s.Player.Dir, s.Map.X, s.Map.Y, s.Keys)
 	nextScene = &playScene
 	pause = false
-
-	if err == nil {
-		sdl.Log("Load game from %s successfully", name)
-	}
+	sdl.Log("Loaded game from %s successfully", name)
 }
