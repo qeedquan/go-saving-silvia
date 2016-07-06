@@ -510,7 +510,7 @@ func (p *PlayScene) initMap() {
 					sid = "bluekey"
 				}
 
-				if !p.keys[sid] {
+				if !strings.HasSuffix(sid, "key") || !p.keys[sid] {
 					sprites = append(sprites, newSprite(sid, float64(x)+0.5, float64(y)+0.5))
 				}
 				if maps.music == "overworld" {
